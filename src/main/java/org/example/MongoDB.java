@@ -1,5 +1,12 @@
-package org.example;
-
+/**
+ * Project: Lab3Caratini
+ * Purpose Details: This project demonstrates CRUD for MongoDB.
+ * Course: IST242
+ * Author: Maximo Caratini
+ * Date Developed: 2024-02-15
+ * Last Date Changed: 2024-02-29
+ * Rev: 1.0
+ */
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -7,48 +14,42 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.FindIterable;
 import org.bson.Document;
 
-import java.util.List;
-
 public class MongoDB {
     public static void main(String[] args) {
         // Create a MongoClient using the factory method
         try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
             // Access the database and collection
             MongoDatabase database = mongoClient.getDatabase("your_database_name");
-            MongoCollection<Document> collection = database.getCollection("students");
+            MongoCollection<Document> collection = database.getCollection("customers");
 
-            // Example: Insert a document
-            Document newStudent = new Document("first_name", "John")
+            // Insert a document
+            Document newCustomer = new Document("first_name", "John")
                     .append("last_name", "Doe")
                     .append("age", 20)
                     .append("email", "john@example.com");
-            collection.insertOne(newStudent);
+            collection.insertOne(newCustomer);
 
             // Read
-            FindIterable<Document> students = collection.find();
-            for (Document student : students) {
-                System.out.println(student.toJson());
+            FindIterable<Document> customers = collection.find();
+            for (Document customer : customers) {
+                System.out.println(customer.toJson());
             }
 
             // Update
-            Document updatedStudent = new Document("$set", new Document("first_name", "Updated First Name"));
-            collection.updateOne(new Document("first_name", "John"), updatedStudent);
+            Document updatedCustomer = new Document("$set", new Document("last_name", "Doe")
+                    .append("age", 20)
+                    .append("email", "john@example.com"));
+            collection.updateOne(new Document("first_name", "John"), updatedCustomer);
 
             // Read again
-            students = collection.find();
-            for (Document student : students) {
-                System.out.println(student.toJson());
+            customers = collection.find();
+            for (Document customer : customers) {
+                System.out.println(customer.toJson());
             }
 
             // Delete
             collection.deleteOne(new Document("first_name", "John"));
-
+            System.out.println("Deleted document with first_name 'John'");
+            }
         }
     }
-
-    public static MongoDB getInstance() {
-    }
-
-    public List<Document> findAllCustomers() {
-    }
-}
